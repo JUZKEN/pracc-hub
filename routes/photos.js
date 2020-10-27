@@ -12,8 +12,8 @@ router.get('/me', auth, async (req, res) => {
    res.send(photos);
 });
 
-router.get('/:id', [auth, admin], async (req, res) => {
-   const photos = await Photo.find({ user: req.params.id });
+router.get('/:uid', [auth, admin], async (req, res) => {
+   const photos = await Photo.find({ user: req.params.uid });
    if (!photos.length) return res.status(404).send('Could not find any photos.');
    res.send(photos);
 });
@@ -27,6 +27,12 @@ router.post('/', auth, async (req, res) => {
    let photo = new Photo(_.pick(req.body, ['photo_path', 'recording_path'])).set('user', req.user._id);
    await photo.save();
 
+   res.send(photo);
+});
+
+router.delete('/me/:id', auth, async (req, res) => {
+   const photo = await Photo.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+   if (!photo) return res.status(404).send('Could not find the picture with the given id.');
    res.send(photo);
 });
 

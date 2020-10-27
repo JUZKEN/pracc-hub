@@ -45,6 +45,6 @@ router.delete('/:id', [auth, admin], async (req, res) => {
    res.send(user);
 });
 
-// TODO: route for updating a user
+// TODO: route for updating user, put request '/me'
 
 module.exports = router;
