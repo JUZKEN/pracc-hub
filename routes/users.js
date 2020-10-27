@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('/', [auth, admin], async (req, res) => {
    const users = await User.find().select('-password');
-   if (!users) return res.status(404).send('Could not find any users.');
+   if (!users.length) return res.status(404).send('Could not find any users.');
    res.send(users);
 });
 
@@ -25,7 +25,10 @@ router.post('/', async (req, res) => {
    let user = await User.findOne({ email: req.body.email });
    if (user) return res.status(400).send('A user is already registered with the given email');
 
-   user = new User(_.pick(req.body, ['name', 'email', 'password']));
+   user = await User.findOne({ username: req.body.username });
+   if (user) return res.status(400).send('A user is already registered with the given username');
+
+   user = new User(_.pick(req.body, ['username', 'name', 'email', 'password']));
 
    // hash password
    const salt = await bcrypt.genSalt(10);
@@ -33,7 +36,15 @@ router.post('/', async (req, res) => {
    await user.save();
 
    const token = user.generateAuthToken();
-   res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
+   res.header('x-auth-token', token).send(_.pick(user, ['_id', 'username', 'name', 'email', 'date_created']));
 });
+
+router.delete('/:id', [auth, admin], async (req, res) => {
+   const user = await User.findByIdAndDelete(req.params.id);
+   if (!user) return res.status(404).send('User with the given ID was not found.');
+   res.send(user);
+});
+
+// TODO: route for updating a user
 
 module.exports = router;
