@@ -10,17 +10,12 @@ const Photo = mongoose.model('Photo', new mongoose.Schema({
       type: String,
       required: true
    },
-   date_created: {
-      type: Date,
-      default: Date.now(),
-      required: true
-   },
    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true
    },
-}));
+}, {timestamps: true}));
 
 function validatePhoto(photo) {
    const schema = Joi.object({

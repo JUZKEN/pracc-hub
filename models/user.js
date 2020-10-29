@@ -1,8 +1,11 @@
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const passwordComplexity = require("joi-password-complexity");
 const mongoose = require('mongoose');
+const Token = require('./token');
 
 const userSchema = new mongoose.Schema({
    username: {
@@ -30,18 +33,63 @@ const userSchema = new mongoose.Schema({
       minlength: 5,
       maxlength: 1024
    },
-   date_created: {
+   resetPasswordToken: {
+      type: String,
+      required: false
+   },
+   resetPasswordExpires: {
       type: Date,
-      default: Date.now(),
-      required: true
+      required: false
+   },
+   isVerified: {
+      type: Boolean,
+      default: false
    },
    isAdmin: Boolean
+}, {timestamps: true});
+
+userSchema.pre('save',  function(next) {
+   const user = this;
+   if (!user.isModified('password')) return next();
+
+   bcrypt.genSalt(10, function(err, salt) {
+       if (err) return next(err);
+
+       bcrypt.hash(user.password, salt, function(err, hash) {
+           if (err) return next(err);
+
+           user.password = hash;
+           next();
+       });
+   });
 });
 
 userSchema.methods.generateAuthToken = function() {
-   const token = jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, config.get('jwtPrivateKey'), { algorithm: 'HS256' });
-   return token;
+   // TODO: add expiration date
+   let payload = {
+      _id: this._id,
+      isAdmin: this.isAdmin
+   }
+   return jwt.sign(payload, config.get('jwtPrivateKey'), { algorithm: 'HS256' });
 }
+
+userSchema.methods.comparePassword = async function(password) {
+   return await bcrypt.compare(password, this.password);
+}
+
+userSchema.methods.generatePasswordReset = function() {
+   this.resetPasswordToken = crypto.randomBytes(20).toString('hex');
+   this.resetPasswordExpires = Date.now() + 3600000; //expires in an hour
+};
+
+userSchema.methods.generateVerificationToken = function() {
+   let payload = {
+       userId: this._id,
+       token: crypto.randomBytes(20).toString('hex')
+   };
+
+   return new Token(payload);
+};
 
 const User = mongoose.model('User', userSchema);
 

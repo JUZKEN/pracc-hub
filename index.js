@@ -1,6 +1,7 @@
 const config = require('config');
 const express = require('express');
 const mongoose = require('mongoose');
+const error = require('./middleware/error');
 const users = require('./routes/users');
 const photos = require('./routes/photos');
 const auth = require('./routes/auth');
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/api/users', users);
 app.use('/api/photos', photos);
 app.use('/api/auth', auth);
+app.use(error);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));

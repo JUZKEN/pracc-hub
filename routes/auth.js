@@ -1,31 +1,12 @@
-const Joi = require('joi');
-const { User } = require('../models/user');
-const _ = require('lodash');
-const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
+const Auth = require('../controllers/auth');
 
-router.post('/', async (req, res) => {
-   const { error } = validate(req.body);
-   if (error) return res.status(400).send(error.details[0].message);
+router.post('/register', Auth.register);
 
-   let user = await User.findOne({ email: req.body.email });
-   if (!user) return res.status(400).send('Invalid email or password.');
+router.post('/login', Auth.login);
 
-   const validPassword = await bcrypt.compare(req.body.password, user.password);
-   if (!validPassword) return res.status(400).send('Invalid email or password.');
-
-   const token = user.generateAuthToken();
-   res.send(token);
-});
-
-function validate(user) {
-   const schema = Joi.object({
-      email: Joi.required(),
-      password: Joi.required()
-   });
-   return schema.validate(user);
-}
+router.post('/verify/:token', Auth.verify);
 
 module.exports = router;
