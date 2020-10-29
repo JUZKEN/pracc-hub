@@ -1,13 +1,19 @@
 const config = require('config');
 const jwt = require('jsonwebtoken');
+const { User } = require('../models/user');
 
-module.exports = function(req, res, next) {
+module.exports = async function(req, res, next) {
    const token = req.header('x-auth-token');
    if (!token) return res.status(401).send('Access denied. No token provided.');
 
    try {
-      const decoded = jwt.verify(token, config.get('jwtPrivateKey'), { algorithms: ['HS256'] });
-      req.user = decoded;
+      const payload = jwt.verify(token, config.get('jwtPrivateKey'), { algorithms: ['HS256'] });
+
+      // Check if user still exists
+      let user = await User.findById(payload._id);
+      if (!user) return res.status(401).send('Invalid token.');
+
+      req.user = payload;
       next();
    } catch (ex) {
       res.status(400).send('Invalid token.');

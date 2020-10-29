@@ -1,6 +1,7 @@
 const asyncMiddleware = require('../middleware/async');
-const { Photo, validate } = require('../models/photo');
 const _ = require('lodash');
+
+const { Photo, validate } = require('../models/photo');
 
 exports.me = asyncMiddleware(async (req, res, next) => {
    const photos = await Photo.find({ user: req.user._id });
