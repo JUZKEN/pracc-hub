@@ -1,3 +1,7 @@
 {
-   "jwtPrivateKey": ""
+   "dbconfig": {
+      "host": "localhost",
+      "name": "memos"
+    },
+   "JWT_SECRET": ""
 }

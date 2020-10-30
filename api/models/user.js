@@ -65,7 +65,7 @@ userSchema.methods.generateAuthToken = function() {
       _id: this._id,
       isAdmin: this.isAdmin
    }
-   return jwt.sign(payload, config.get('jwtPrivateKey'), { algorithm: 'HS256' });
+   return jwt.sign(payload, config.get('JWT_SECRET'), { algorithm: 'HS256' });
 }
 
 userSchema.methods.comparePassword = async function(password) {
