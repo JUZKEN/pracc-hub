@@ -16,7 +16,9 @@ mongoose.connect('mongodb://localhost/memos', {useNewUrlParser: true, useUnified
    .then(() => console.log('Connected to MongoDB...'))
    .catch(err => console.error('Could not connect to MongoDB...', err))
 
+app.set('view engine', 'pug')
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/api/users', users);
 app.use('/api/photos', photos);
 app.use('/api/auth', auth);

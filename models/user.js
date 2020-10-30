@@ -23,8 +23,6 @@ const userSchema = new mongoose.Schema({
    email: {
       type: String,
       required: true,
-      minlength: 5,
-      maxlength: 255,
       unique: true
    },
    password: {
@@ -51,7 +49,6 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save',  function(next) {
    const user = this;
    if (!user.isModified('password')) return next();
-
    bcrypt.genSalt(10, function(err, salt) {
        if (err) return next(err);
 
@@ -91,17 +88,4 @@ userSchema.methods.generateVerificationToken = function() {
    return new Token(payload);
 };
 
-const User = mongoose.model('User', userSchema);
-
-function validateUser(user) {
-   const schema = Joi.object({
-      username: Joi.string().min(2).max(50).required(),
-      name: Joi.string().max(50).required(),
-      email: Joi.string().min(5).max(255).required().email(),
-      password: passwordComplexity()
-   });
-   return schema.validate(user);
-}
-
-exports.User = User;
-exports.validate = validateUser;
+module.exports = mongoose.model('User', userSchema);

@@ -1,13 +1,16 @@
+const Joi = require('joi');
+const passwordComplexity = require("joi-password-complexity");
 const sendEmail = require('../utils/sendEmail');
 const asyncMiddleware = require('../middleware/async');
 const _ = require('lodash');
 
-const { User, validate } = require('../models/user');
+const User = require('../models/user');
 const Token = require('../models/token');
 
 exports.register = asyncMiddleware(async (req, res, next) => {
-   const { error } = validate(req.body);
+   const { error } = validateRegister(req.body);
    if (error) return res.status(400).send(error.details[0].message);
+
 
    // Check if there is a user with the same email
    let user = await User.findOne({ email: req.body.email });
@@ -26,6 +29,9 @@ exports.register = asyncMiddleware(async (req, res, next) => {
 });
 
 exports.login = asyncMiddleware(async (req, res, next) => {
+   const { error } = validateLogin(req.body);
+   if (error) return res.status(400).send(error.details[0].message);
+
    const { email, password } = req.body;
 
    let user = await User.findOne({ email });
@@ -79,7 +85,7 @@ exports.resendToken = asyncMiddleware(async (req, res, next) => {
    // Check if the account has not been verified already.
    if (user.isVerified) return res.status(400).json({ message: 'This account has already been verified. Please log in.'});
 
-   await sendVerificationEmail(user, req, res);
+   await sendVerificationEmail(user, req, res); 
 });
 
 async function sendVerificationEmail(user, req, res) {
@@ -99,4 +105,22 @@ async function sendVerificationEmail(user, req, res) {
    await sendEmail(mailOptions);
 
    res.json({message: 'A verification email has been sent to ' + user.email + '.'});
+}
+
+
+// TODO: convert these validations into a middleware
+function validateRegister(object) {
+   return Joi.object({
+      username: Joi.string().alphanum().min(2).max(30).required(),
+      name: Joi.string().max(50).required(),
+      email: Joi.string().min(5).max(255).required().email(),
+      password: passwordComplexity()
+   }).validate(object);
+}
+
+function validateLogin(object) {
+   return Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().required()
+   }).validate(object);
 }
