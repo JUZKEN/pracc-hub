@@ -1,9 +1,7 @@
 const config = require('config');
 const jwt = require('jsonwebtoken');
-const Joi = require('joi');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const passwordComplexity = require("joi-password-complexity");
 const mongoose = require('mongoose');
 const Token = require('./token');
 

@@ -1,7 +1,7 @@
 const asyncMiddleware = require('../middleware/async');
 const _ = require('lodash');
 
-const { Photo, validate } = require('../models/photo');
+const Photo = require('../models/photo');
 
 exports.me = asyncMiddleware(async (req, res, next) => {
    const photos = await Photo.find({ user: req.user._id });
@@ -16,10 +16,7 @@ exports.show = asyncMiddleware(async (req, res, next) => {
 });
 
 exports.store = asyncMiddleware(async (req, res, next) => {
-   const { error } = validate(req.body);
-   if (error) return res.status(400).send(error.details[0].message);
-
-   // Upload to AWS S3 storage...
+   // TODO: Upload to AWS S3 storage...
 
    let photo = new Photo(_.pick(req.body, ['photo_path', 'recording_path'])).set('user', req.user._id);
    await photo.save();

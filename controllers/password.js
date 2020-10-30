@@ -1,13 +1,9 @@
-const Joi = require('joi');
-const passwordComplexity = require("joi-password-complexity");
 const asyncMiddleware = require('../middleware/async');
 const sendEmail = require('../utils/sendEmail');
+
 const User = require('../models/user');
 
 exports.recover = asyncMiddleware(async (req, res, next) => {
-   const { error } = validateRecover(req.body);
-   if (error) return res.status(400).send(error.details[0].message);
-
    const { email } = req.body;
 
    // Check if the user exists
@@ -46,9 +42,6 @@ exports.reset = asyncMiddleware(async (req, res, next) => {
 });
 
 exports.resetPassword = asyncMiddleware(async (req, res, next) => {
-   const { error } = validateResetPassword(req.body);
-   if (error) return res.status(400).send(error.details[0].message);
-
    const { token } = req.params;
 
    const user = await User.findOne({resetPasswordToken: token, resetPasswordExpires: {$gt: Date.now()}});
@@ -76,20 +69,3 @@ exports.resetPassword = asyncMiddleware(async (req, res, next) => {
 
    res.status(200).json({message: 'Your password has been updated.'});
 });
-
-// TODO: convert these validations into a middleware
-function validateRecover(object) {
-   return Joi.object({
-      email: Joi.string().email().required()
-   }).validate(object);
-}
-
-function validateResetPassword(object) {
-   return Joi.object({
-      password: passwordComplexity(),
-      confirmPassword: Joi.any()
-      .equal(Joi.ref('password'))
-      .required()
-   }).validate(object);
-}
-

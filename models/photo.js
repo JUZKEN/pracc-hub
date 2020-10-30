@@ -1,7 +1,6 @@
-const Joi = require('joi');
 const mongoose = require('mongoose');
 
-const Photo = mongoose.model('Photo', new mongoose.Schema({
+exports.Photo = mongoose.model('Photo', new mongoose.Schema({
    photo_path: {
       type: String,
       required: true
@@ -16,14 +15,3 @@ const Photo = mongoose.model('Photo', new mongoose.Schema({
       required: true
    },
 }, {timestamps: true}));
-
-function validatePhoto(photo) {
-   const schema = Joi.object({
-      photo_path: Joi.required(),
-      recording_path: Joi.required()
-   });
-   return schema.validate(photo);
-}
-
-exports.Photo = Photo;
-exports.validate = validatePhoto;
