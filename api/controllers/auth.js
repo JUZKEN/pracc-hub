@@ -1,11 +1,10 @@
 const sendEmail = require('../utils/sendEmail');
-const asyncMiddleware = require('../middleware/async');
 const _ = require('lodash');
 
 const User = require('../models/user');
 const Token = require('../models/token');
 
-exports.register = asyncMiddleware(async (req, res, next) => {
+exports.register = async (req, res, next) => {
    // Check if there is a user with the same email
    let user = await User.findOne({ email: req.body.email });
    if (user) return res.status(401).send('A user is already registered with the given email');
@@ -20,9 +19,9 @@ exports.register = asyncMiddleware(async (req, res, next) => {
 
    // Send a verification email
    await sendVerificationEmail(newUser, req, res);   
-});
+};
 
-exports.login = asyncMiddleware(async (req, res, next) => {
+exports.login = async (req, res, next) => {
    const { email, password } = req.body;
 
    let user = await User.findOne({ email });
@@ -37,9 +36,9 @@ exports.login = asyncMiddleware(async (req, res, next) => {
 
    // Login successful
    res.json({token: user.generateAuthToken(), user: _.pick(user, ['username', 'name', 'email'])});
-});
+};
 
-exports.verify = asyncMiddleware(async (req, res, next) => {
+exports.verify = async (req, res, next) => {
    if(!req.params.token) return res.status(400).json({message: "We were unable to find a user for this token."});
    
    // Find a matching token
@@ -64,9 +63,9 @@ exports.verify = asyncMiddleware(async (req, res, next) => {
    await token.remove();
 
    res.json({message: "The account has been verified. Please log in."});
-});
+};
 
-exports.resendToken = asyncMiddleware(async (req, res, next) => {
+exports.resendToken = async (req, res, next) => {
    const { email } = req.body;
 
    // Check if for a user with the given email.
@@ -77,7 +76,7 @@ exports.resendToken = asyncMiddleware(async (req, res, next) => {
    if (user.isVerified) return res.status(400).json({ message: 'This account has already been verified. Please log in.'});
 
    await sendVerificationEmail(user, req, res); 
-});
+};
 
 async function sendVerificationEmail(user, req, res) {
    // Generate and save the verification token

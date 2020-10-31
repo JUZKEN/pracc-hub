@@ -1,9 +1,8 @@
-const asyncMiddleware = require('../middleware/async');
 const sendEmail = require('../utils/sendEmail');
 
 const User = require('../models/user');
 
-exports.recover = asyncMiddleware(async (req, res, next) => {
+exports.recover = async (req, res, next) => {
    const { email } = req.body;
 
    // Check if the user exists
@@ -29,9 +28,9 @@ exports.recover = asyncMiddleware(async (req, res, next) => {
    await sendEmail(mailOptions);
 
    res.status(200).json({message: 'A reset email has been sent to ' + user.email + '.'});
-});
+};
 
-exports.reset = asyncMiddleware(async (req, res, next) => {
+exports.reset = async (req, res, next) => {
    const { token } = req.params;
 
    const user = await User.findOne({resetPasswordToken: token, resetPasswordExpires: {$gt: Date.now()}});
@@ -39,9 +38,9 @@ exports.reset = asyncMiddleware(async (req, res, next) => {
 
    //Redirect user to form with the email address
    res.render('reset', {user});
-});
+};
 
-exports.resetPassword = asyncMiddleware(async (req, res, next) => {
+exports.resetPassword = async (req, res, next) => {
    const { token } = req.params;
 
    const user = await User.findOne({resetPasswordToken: token, resetPasswordExpires: {$gt: Date.now()}});
@@ -68,4 +67,4 @@ exports.resetPassword = asyncMiddleware(async (req, res, next) => {
    await sendEmail(mailOptions);
 
    res.status(200).json({message: 'Your password has been updated.'});
-});
+};
