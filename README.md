@@ -1,2 +1,2 @@
-# memos-backend
-Backend for mobile application
+# NodeJS REST API
+NodeJS backend for future web/mobile app
