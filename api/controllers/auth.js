@@ -2,7 +2,7 @@ const sendEmail = require('../utils/sendEmail');
 const _ = require('lodash');
 
 const User = require('../models/user');
-const Token = require('../models/token');
+const VerificationToken = require('../models/verificationToken');
 
 exports.register = async (req, res, next) => {
    // Check if there is a user with the same email
@@ -23,26 +23,34 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
    const { email, password } = req.body;
+   const ipAddress = req.ip;
 
    let user = await User.findOne({ email });
    if (!user) return res.status(401).send('The email adress is not associated with any account.');
 
    // Validate password
-   const validPassword = await user.comparePassword(req.body.password);
+   const validPassword = await user.comparePassword(password);
    if (!validPassword) return res.status(401).send('Invalid email or password.');
 
    // Check if user is not verified
    if (!user.isVerified) return res.status(401).json({ message: 'Your account has not been verified.' });
 
-   // Login successful
-   res.json({token: user.generateAuthToken(), user: _.pick(user, ['username', 'name', 'email'])});
+   // Generate jwt and refresh tokens
+   const jwtToken = user.generateAuthToken();
+   const refreshToken = user.generateRefreshToken(ipAddress);
+
+   // Save refresh token
+   await refreshToken.save();
+
+   // Send tokens and user data to the client
+   res.json({ user: _.pick(user, ['username', 'name', 'email']), jwtToken: jwtToken, refreshToken: refreshToken.token });
 };
 
 exports.verify = async (req, res, next) => {
    if(!req.params.token) return res.status(400).json({message: "We were unable to find a user for this token."});
    
    // Find a matching token
-   const token = await Token.findOne({ token: req.params.token });
+   const token = await VerificationToken.findOne({ token: req.params.token });
    if (!token) return res.status(400).json({ message: 'We were unable to find a valid token. Your token may have expired.' });
 
    // Find a matching user with that token
@@ -65,7 +73,7 @@ exports.verify = async (req, res, next) => {
    res.json({message: "The account has been verified. Please log in."});
 };
 
-exports.resendToken = async (req, res, next) => {
+exports.resendVerificationToken = async (req, res, next) => {
    const { email } = req.body;
 
    // Check if for a user with the given email.

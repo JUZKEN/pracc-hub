@@ -7,7 +7,10 @@ exports.register = (req, res, next) => {
       username: Joi.string().alphanum().min(2).max(30).required(),
       name: Joi.string().max(50).required(),
       email: Joi.string().min(5).max(255).required().email(),
-      password: passwordComplexity()
+      password: passwordComplexity(),
+      confirmPassword: Joi.any()
+      .equal(Joi.ref('password'))
+      .required()
    }).validate(req.body);
 
    if (error) return res.status(400).json({message: error.details[0].message});
@@ -58,6 +61,15 @@ exports.photo = (req, res, next) => {
    const { error } = Joi.object({
       photo_path: Joi.required(),
       recording_path: Joi.required()
+   }).validate(req.body);
+
+   if (error) return res.status(400).json({message: error.details[0].message});
+   next();
+}
+
+exports.revokeToken = (req, res, next) => {
+   const { error } = Joi.object({
+       token: Joi.string().empty('')
    }).validate(req.body);
 
    if (error) return res.status(400).json({message: error.details[0].message});

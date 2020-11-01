@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
-const Token = require('./token');
+const RefreshToken = require('./refreshToken');
+const VerificationToken = require('./verificationToken');
 
 const userSchema = new mongoose.Schema({
    username: {
@@ -60,12 +61,22 @@ userSchema.pre('save',  function(next) {
 });
 
 userSchema.methods.generateAuthToken = function() {
-   // TODO: add expiration date
    let payload = {
       _id: this._id,
       isAdmin: this.isAdmin
    }
-   return jwt.sign(payload, config.get('JWT_SECRET'), { algorithm: 'HS256' });
+   // JWT token that expires in 15 minutes.
+   return jwt.sign(payload, config.get('JWT_SECRET'), { algorithm: 'HS256', expiresIn: '15m' });
+}
+
+userSchema.methods.generateRefreshToken = function(ipAddress) {
+   // Refresh token that expires in 7 days
+   return new RefreshToken({
+      user: this._id,
+      token: crypto.randomBytes(40).toString('hex'),
+      expires: new Date(Date.now() + 7*24*60*60*1000),
+      createdByIp: ipAddress
+   });
 }
 
 userSchema.methods.comparePassword = async function(password) {
@@ -73,7 +84,7 @@ userSchema.methods.comparePassword = async function(password) {
 }
 
 userSchema.methods.generatePasswordReset = function() {
-   this.resetPasswordToken = crypto.randomBytes(20).toString('hex');
+   this.resetPasswordToken = crypto.randomBytes(40).toString('hex');
    this.resetPasswordExpires = Date.now() + 3600000; //expires in an hour
 };
 
@@ -82,8 +93,11 @@ userSchema.methods.generateVerificationToken = function() {
        userId: this._id,
        token: crypto.randomBytes(20).toString('hex')
    };
-
-   return new Token(payload);
+   return new VerificationToken(payload);
 };
+
+userSchema.methods.logoutAllDevices = async function(ipAddress) {
+   // TODO: Revoke all refresh tokens from that user which are neither expired nor revoked.
+}
 
 module.exports = mongoose.model('User', userSchema);

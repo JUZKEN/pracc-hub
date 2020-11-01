@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-exports.Photo = mongoose.model('Photo', new mongoose.Schema({
+module.exports = mongoose.model('Photo', new mongoose.Schema({
    photo_path: {
       type: String,
       required: true
