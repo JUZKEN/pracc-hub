@@ -56,7 +56,7 @@ exports.resetPassword = async (req, res, next) => {
    await user.save();
 
    // TODO: Logout user from other devices
-   // user.logoutAllDevices(req.ip);
+   await user.logoutAllDevices();
 
    // Send email
    let link = "http://" + req.headers.host + "/api/auth/reset/" + user.resetPasswordToken;

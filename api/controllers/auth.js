@@ -54,7 +54,7 @@ exports.verify = async (req, res, next) => {
    if (!token) return res.status(400).json({ message: 'We were unable to find a valid token. Your token may have expired.' });
 
    // Find a matching user with that token
-   let user = await User.findOne({ _id: token.userId });
+   let user = await User.findOne({ _id: token.user });
    if (!user) {
       await token.remove();
       return res.status(400).json({ message: 'We were unable to find a user for this token.' });

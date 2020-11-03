@@ -65,8 +65,8 @@ userSchema.methods.generateAuthToken = function() {
       _id: this._id,
       isAdmin: this.isAdmin
    }
-   // JWT token that expires in 15 minutes.
-   return jwt.sign(payload, config.get('JWT_SECRET'), { algorithm: 'HS256', expiresIn: '15m' });
+   // JWT token that expires in 10 minutes.
+   return jwt.sign(payload, config.get('JWT_SECRET'), { algorithm: 'HS256', expiresIn: '10m' });
 }
 
 userSchema.methods.generateRefreshToken = function(ipAddress) {
@@ -74,7 +74,6 @@ userSchema.methods.generateRefreshToken = function(ipAddress) {
    return new RefreshToken({
       user: this._id,
       token: crypto.randomBytes(40).toString('hex'),
-      expires: new Date(Date.now() + 7*24*60*60*1000),
       createdByIp: ipAddress
    });
 }
@@ -90,14 +89,14 @@ userSchema.methods.generatePasswordReset = function() {
 
 userSchema.methods.generateVerificationToken = function() {
    let payload = {
-       userId: this._id,
+       user: this._id,
        token: crypto.randomBytes(20).toString('hex')
    };
    return new VerificationToken(payload);
 };
 
-userSchema.methods.logoutAllDevices = async function(ipAddress) {
-   // TODO: Revoke all refresh tokens from that user which are neither expired nor revoked.
+userSchema.methods.logoutAllDevices = async function() {
+   await RefreshToken.remove({ user: this._id });
 }
 
 module.exports = mongoose.model('User', userSchema);
