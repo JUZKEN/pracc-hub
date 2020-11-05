@@ -1,10 +1,10 @@
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 
+const { apiLimiter } = require('./api/middleware/limiter');
 const error = require('./api/middleware/error');
 const AppError = require('./api/utils/appError');
 const users = require('./api/routes/users');
@@ -16,13 +16,7 @@ module.exports = function(app) {
    app.use(helmet());
 
    // Limit request from the same API 
-   // TODO: Limiter for register route, like 5 sucessful request each hour max
-   const limiter = rateLimit({
-      max: 150, // limit each IP to 150 requests per windowMs
-      windowMs: 60 * 60 * 1000, // 1 hour
-      message: 'Too Many Requests from this IP, please try again in an hour'
-   });
-   app.use('/api', limiter);
+   app.use('/api', apiLimiter);
 
    // Body parser, reading data from body into req.body
    app.use(express.json());

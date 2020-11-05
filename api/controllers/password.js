@@ -55,7 +55,7 @@ exports.resetPassword = async (req, res, next) => {
    // Save the updated user object
    await user.save();
 
-   // TODO: Logout user from other devices
+   // Logout user from other devices
    await user.logoutAllDevices();
 
    // Send email

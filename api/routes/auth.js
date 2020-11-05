@@ -1,5 +1,6 @@
 const auth = require('../middleware/auth');
 const validate = require('../middleware/validate');
+const { registerLimiter } = require('../middleware/limiter');
 const express = require('express');
 const router = express.Router();
 
@@ -7,7 +8,7 @@ const Auth = require('../controllers/auth');
 const RefreshToken = require('../controllers/refreshToken');
 const Password = require('../controllers/password');
 
-router.post('/register', validate.register, Auth.register);
+router.post('/register', registerLimiter, validate.register, Auth.register);
 router.post('/login', validate.login, Auth.login);
 
 // Refresh token
