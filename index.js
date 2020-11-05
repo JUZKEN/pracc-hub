@@ -9,7 +9,7 @@ require('./logging')();
 require('./config')();
 
 // Connect to database
-const database = `mongodb://${config.get('dbConfig.HOST')}/${config.get('dbConfig.DB')}`;
+const database = config.get('MONGODB_URI');
 mongoose.connect(database, {
    useNewUrlParser: true,
    useUnifiedTopology: true

@@ -1,7 +1,4 @@
 {
-   "dbConfig": {
-      "HOST": "localhost",
-      "DB": "memos"
-    },
+   "MONGODB_URI": "mongodb://localhost/memos",
    "JWT_SECRET": ""
 }

@@ -1,3 +1,4 @@
 {
+   "MONGODB_URI": "MONGODB_URI",
    "JWT_SECRET": "memos_JWT_SECRET"
 }
