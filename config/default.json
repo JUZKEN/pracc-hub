@@ -1,7 +1,7 @@
 {
-   "dbconfig": {
-      "host": "localhost",
-      "name": "memos"
+   "dbConfig": {
+      "HOST": "localhost",
+      "DB": "memos"
     },
    "JWT_SECRET": ""
 }

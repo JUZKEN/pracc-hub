@@ -26,6 +26,16 @@ exports.login = (req, res, next) => {
    next();
 }
 
+exports.userUpdate = (req, res, next) => {
+   const { error } = Joi.object({
+      username: Joi.string().alphanum().min(2).max(30).optional(),
+      name: Joi.string().max(50).optional()
+   }).validate(req.body);
+
+   if (error) return res.status(400).json({message: error.details[0].message});
+   next();
+}
+
 exports.recover = (req, res, next) => {
    const { error } = Joi.object({
       email: Joi.string().email().required()
@@ -56,19 +66,19 @@ exports.resend = (req, res, next) => {
    next();
 }
 
-exports.photo = (req, res, next) => {
+exports.revokeToken = (req, res, next) => {
    const { error } = Joi.object({
-      photo_path: Joi.required(),
-      recording_path: Joi.required()
+       token: Joi.string().empty('')
    }).validate(req.body);
 
    if (error) return res.status(400).json({message: error.details[0].message});
    next();
 }
 
-exports.revokeToken = (req, res, next) => {
+exports.photo = (req, res, next) => {
    const { error } = Joi.object({
-       token: Joi.string().empty('')
+      photo_path: Joi.required(),
+      recording_path: Joi.required()
    }).validate(req.body);
 
    if (error) return res.status(400).json({message: error.details[0].message});
