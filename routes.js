@@ -1,5 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
+const compression = require('compression');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -14,6 +15,9 @@ const auth = require('./api/routes/auth');
 module.exports = function(app) {
    // Set security HTTP headers
    app.use(helmet());
+
+   // Compress HTTP responses.
+   app.use(compression());
 
    // Limit request from the same API 
    app.use('/api', apiLimiter);
