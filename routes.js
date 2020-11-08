@@ -7,7 +7,6 @@ const mongoSanitize = require('express-mongo-sanitize');
 
 const { apiLimiter } = require('./api/middleware/limiter');
 const error = require('./api/middleware/error');
-const AppError = require('./api/utils/appError');
 const users = require('./api/routes/users');
 const photos = require('./api/routes/photos');
 const auth = require('./api/routes/auth');
@@ -40,10 +39,9 @@ module.exports = function(app) {
    app.use('/api/photos', photos);
    app.use('/api/auth', auth);
 
-   // Handling undefined routes, needs to be the last route defined.
+   // Handling undefined routes.
    app.use('*', (req, res, next) => {
-      const err = new AppError(404, 'fail', 'undefined route');
-      next(err, req, res, next);
+      res.status(404).json({message: 'Undefined Route'});
    });
 
    // Handling errors
