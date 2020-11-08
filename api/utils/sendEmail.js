@@ -1,20 +1,13 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail')
+const winston = require('winston');
+const config = require('config');
 
-// TODO: replace with real mail from env
-const transporter = nodemailer.createTransport({
-   host: 'smtp.ethereal.email',
-   port: 587,
-   auth: {
-       user: 'quinn82@ethereal.email',
-       pass: 'ySsaQSGsMf8jDMUTsY'
-   }
-});
+sgMail.setApiKey(config.get('SENDGRID.API_KEY'));
 
-module.exports = function(mailOptions) {
-   return new Promise((resolve, reject) => {
-      transporter.sendMail(mailOptions, function(error, result){
-         if (error) return reject(error);
-         return resolve(result)
-       });
-   })
+module.exports = async function(to, subject, html) {
+  const sender = config.get('SENDGRID.SENDER');
+  let msg = {
+    from: sender, to, subject, html
+  }
+  await sgMail.send(msg);
 }

@@ -1,4 +1,10 @@
 {
-   "MONGODB_URI": "mongodb://localhost/memos",
-   "JWT_SECRET": ""
+   "MONGODB_URI": "mongodb://localhost/vividly",
+   "JWT_SECRET": "",
+   "SENDGRID": {
+      "API_KEY": "",
+      "USERNAME": "",
+      "PASSWORD": "",
+      "SENDER": ""
+   }
 }

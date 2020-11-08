@@ -93,14 +93,9 @@ async function sendVerificationEmail(user, req, res) {
 
    // Send the verification email
    let verificationLink = "http://"+req.headers.host+"/api/auth/verify/"+token.token;
-   let mailOptions = {
-      from: 'quinn82@ethereal.email', // TODO: replace with real mail from env
-      to: user.email,
-      subject: 'Email verification',
-      html: `<p>Hi ${user.username}!<p><br><p>Please click on the following <a href="${verificationLink}" target='_blank'>link</a> to verify your account.</p> 
-      <br><p>If you did not request this, please ignore this email.</p>` // TODO: replace with a better message? Maybe a styled button to verify?
-   }
-   await sendEmail(mailOptions);
+   let html = `<p>Hi ${user.username}!<p><p>Please click on the following <a href="${verificationLink}" target='_blank'>link</a> to verify your account.</p> 
+   <p>If you did not request this, please ignore this email.`
+   await sendEmail(user.email, 'Email verification', html);
 
    res.json({message: 'A verification email has been sent to ' + user.email + '.'});
 }
