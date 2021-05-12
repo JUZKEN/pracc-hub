@@ -1,10 +1,10 @@
 {
    "MONGODB_URI": "mongodb://localhost/vividly",
-   "JWT_SECRET": "123",
+   "JWT_SECRET": "",
    "SENDGRID": {
-      "API_KEY": "123",
-      "USERNAME": "123",
-      "PASSWORD": "123",
-      "SENDER": "123"
+      "API_KEY": "",
+      "USERNAME": "",
+      "PASSWORD": "",
+      "SENDER": ""
    }
 }
