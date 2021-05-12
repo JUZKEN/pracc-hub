@@ -7,7 +7,7 @@ exports.recover = async (req, res, next) => {
 
    // Check if the user exists
    const user = await User.findOne({ email });
-   if (!user) return res.status(401).json({ message: 'The email address ' + req.body.email + ' is not associated with any account. Double-check your email address and try again.'});
+   if (!user) return res.status(401).json({ error: 'The email address ' + req.body.email + ' is not associated with any account. Double-check your email address and try again.'});
 
    // Generate and set password reset token
    user.generatePasswordReset();
@@ -28,7 +28,7 @@ exports.reset = async (req, res, next) => {
    const { token } = req.params;
 
    const user = await User.findOne({resetPasswordToken: token, resetPasswordExpires: {$gt: Date.now()}});
-   if (!user) return res.status(401).json({message: 'Password reset token is invalid or has expired.'});
+   if (!user) return res.status(401).json({error: 'Password reset token is invalid or has expired.'});
 
    //Redirect user to form with the email address
    res.render('reset', {user});
@@ -38,7 +38,7 @@ exports.resetPassword = async (req, res, next) => {
    const { token } = req.params;
 
    const user = await User.findOne({resetPasswordToken: token, resetPasswordExpires: {$gt: Date.now()}});
-   if (!user) return res.status(401).json({message: 'Password reset token is invalid or has expired.'});
+   if (!user) return res.status(401).json({error: 'Password reset token is invalid or has expired.'});
 
    // Set the new password
    user.password = req.body.password;

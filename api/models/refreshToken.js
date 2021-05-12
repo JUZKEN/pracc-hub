@@ -13,7 +13,7 @@ module.exports = mongoose.model('RefreshToken', new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: '30d',
+        expires: '15d',
         required: true
     },
     createdByIp: String,

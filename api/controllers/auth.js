@@ -7,14 +7,14 @@ const VerificationToken = require('../models/verificationToken');
 exports.register = async (req, res, next) => {
    // Check if there is a user with the same email
    let user = await User.findOne({ email: req.body.email });
-   if (user) return res.status(401).send('A user is already registered with the given email');
+   if (user) return res.status(401).json({error: 'A user is already registered with the given email'});
 
    // Check if there is a user with the same username
    user = await User.findOne({ username: req.body.username });
-   if (user) return res.status(401).send('A user is already registered with the given username');
+   if (user) return res.status(401).json({error: 'A user is already registered with the given username'});
 
    // Create and save the new user
-   const newUser = new User(_.pick(req.body, ['username', 'name', 'email', 'password']));
+   const newUser = new User(_.pick(req.body, ['username', 'email', 'password']));
    await newUser.save();
 
    // Send a verification email
@@ -22,18 +22,18 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-   const { email, password } = req.body;
+   const { username, password } = req.body;
    const ipAddress = req.ip;
 
-   let user = await User.findOne({ email });
-   if (!user) return res.status(401).send('The email adress is not associated with any account.');
+   let user = await User.findOne({ username });
+   if (!user) return res.status(401).json({error: 'That username is not associated with any account.'});
 
    // Validate password
    const validPassword = await user.comparePassword(password);
-   if (!validPassword) return res.status(401).send('Invalid email or password.');
+   if (!validPassword) return res.status(401).json({error: 'Invalid email or password.'});
 
    // Check if user is not verified
-   if (!user.isVerified) return res.status(401).json({ message: 'Your account has not been verified.' });
+   if (!user.isVerified) return res.status(401).json({ error: 'Your account has not been verified.' });
 
    // Generate jwt and refresh tokens
    const jwtToken = user.generateAuthToken();
@@ -43,25 +43,25 @@ exports.login = async (req, res, next) => {
    await refreshToken.save();
 
    // Send tokens and user data to the client
-   res.json({ user: _.pick(user, ['username', 'name', 'email']), jwtToken: jwtToken, refreshToken: refreshToken.token });
+   res.json({ user: _.pick(user, ['username', 'email']), jwtToken: jwtToken, refreshToken: refreshToken.token });
 };
 
 exports.verify = async (req, res, next) => {
-   if(!req.params.token) return res.status(400).json({message: "We were unable to find a user for this token."});
+   if(!req.params.token) return res.status(400).json({error: "We were unable to find a user for this token."});
    
    // Find a matching token
    const token = await VerificationToken.findOne({ token: req.params.token });
-   if (!token) return res.status(400).json({ message: 'We were unable to find a valid token. Your token may have expired.' });
+   if (!token) return res.status(400).json({ error: 'We were unable to find a valid token. Your token may have expired.' });
 
    // Find a matching user with that token
    let user = await User.findOne({ _id: token.user });
    if (!user) {
       await token.remove();
-      return res.status(400).json({ message: 'We were unable to find a user for this token.' });
+      return res.status(400).json({ error: 'We were unable to find a user for this token.' });
    }
 
    // Check if the user is already verified
-   if (user.isVerified) return res.status(400).json({ message: 'This user has already been verified.' });
+   if (user.isVerified) return res.status(400).json({ error: 'This user has already been verified.' });
    
    // Verify and save the user
    user.isVerified = true;
@@ -78,10 +78,10 @@ exports.resendVerificationToken = async (req, res, next) => {
 
    // Check if for a user with the given email.
    let user = await User.findOne({ email });
-   if (!user) return res.status(401).json({message: "The email address " + email + " is not associated with any account. Double-check your email address and try again."});
+   if (!user) return res.status(401).json({error: "The email address " + email + " is not associated with any account. Double-check your email address and try again."});
 
    // Check if the account has not been verified already.
-   if (user.isVerified) return res.status(400).json({ message: 'This account has already been verified. Please log in.'});
+   if (user.isVerified) return res.status(400).json({ error: 'This account has already been verified. Please log in.'});
 
    await sendVerificationEmail(user, req, res); 
 };
