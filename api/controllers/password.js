@@ -1,4 +1,4 @@
-const sendEmail = require('../utils/sendEmail');
+const mailer = require('../helpers/mailer');
 
 const User = require('../models/user');
 
@@ -19,7 +19,7 @@ exports.recover = async (req, res, next) => {
    let link = "http://" + req.headers.host + "/api/auth/reset/" + user.resetPasswordToken;
    let html = `<p>Hi ${user.username}</p><p>Please click on the following <a href="${link}">link</a> to reset your password.</p> 
    <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>`
-   await sendEmail(user.email, 'Password change request', html);
+   await mailer(user.email, 'Password change request', html);
 
    res.status(200).json({message: 'A reset email has been sent to ' + user.email + '.'});
 };
@@ -54,7 +54,7 @@ exports.resetPassword = async (req, res, next) => {
 
    // Send email
    let html = `<p>Hi ${user.username}</p><p>This is a confirmation that the password for your account has just been changed.</p>`
-   await sendEmail(user.email, 'Your password has been changed', html);
+   await mailer(user.email, 'Your password has been changed', html);
 
    res.status(200).json({message: 'Your password has been updated.'});
 };

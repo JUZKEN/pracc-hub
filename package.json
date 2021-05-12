@@ -14,7 +14,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^7.4.0",
     "app-root-path": "^3.0.0",
     "bcrypt": "^5.0.0",
     "compression": "^1.7.4",
@@ -31,7 +30,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
     "mongoose": "^5.10.9",
-    "nodemailer": "^6.4.14",
+    "nodemailer": "^6.6.0",
     "pug": "^3.0.0",
     "winston": "^3.3.3",
     "xss-clean": "^0.1.1"

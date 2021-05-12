@@ -1,10 +1,11 @@
 {
-   "MONGODB_URI": "mongodb://localhost/vividly",
+   "MONGODB_URI": "mongodb://localhost/project-name",
    "JWT_SECRET": "",
-   "SENDGRID": {
-      "API_KEY": "",
-      "USERNAME": "",
-      "PASSWORD": "",
-      "SENDER": ""
+   "EMAIL": {
+      "SMTP_HOST": "smtp.ethereal.email",
+      "SMTP_PORT": "587",
+      "SMTP_USERNAME": "hardy.mckenzie@ethereal.email",
+      "SMTP_PASSWORD": "xXbD6mtAJhsETJJWmQ",
+      "SENDER": "hardy.mckenzie@ethereal.email"
    }
 }

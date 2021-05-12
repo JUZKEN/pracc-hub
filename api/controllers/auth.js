@@ -1,4 +1,4 @@
-const sendEmail = require('../utils/sendEmail');
+const mailer = require('../helpers/mailer');
 const _ = require('lodash');
 
 const User = require('../models/user');
@@ -95,7 +95,7 @@ async function sendVerificationEmail(user, req, res) {
    let verificationLink = "http://"+req.headers.host+"/api/auth/verify/"+token.token;
    let html = `<p>Hi ${user.username}!<p><p>Please click on the following <a href="${verificationLink}" target='_blank'>link</a> to verify your account.</p> 
    <p>If you did not request this, please ignore this email.`
-   await sendEmail(user.email, 'Email verification', html);
+   await mailer(user.email, 'Email verification', html);
 
    res.json({message: 'A verification email has been sent to ' + user.email + '.'});
 }
