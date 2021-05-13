@@ -6,10 +6,9 @@ const hpp = require('hpp');
 const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 
-const { apiLimiter } = require('./api/middleware/limiter');
-const error = require('./api/middleware/error');
-const users = require('./api/routes/users');
-const auth = require('./api/routes/auth');
+const { apiLimiter } = require('../api/middleware/limiter');
+const error = require('../api/middleware/error');
+const apiRouter = require('../api');
 
 module.exports = function(app) {
    // Set security HTTP headers
@@ -21,7 +20,7 @@ module.exports = function(app) {
    // Compress HTTP responses.
    app.use(compression());
 
-   // Limit request from the same API 
+   // Limit request from the same API
    app.use('/api', apiLimiter);
 
    // Body parser, reading data from body into req.body
@@ -38,8 +37,7 @@ module.exports = function(app) {
    app.use(hpp());
 
    // Routes
-   app.use('/api/users', users);
-   app.use('/api/auth', auth);
+   app.use('/api', apiRouter);
 
    // Handling undefined routes.
    app.use('*', (req, res, next) => {
