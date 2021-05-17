@@ -1,10 +1,13 @@
 {
-  "name": "nodejs-rest-api",
+  "name": "pracchub",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server/index.js",
+    "backend": "nodemon server/index.js",
+    "frontend": "npm run start --prefix client",
+    "dev": "concurrently \"npm run backend\" \"npm run start --prefix client\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -31,8 +34,11 @@
     "lodash": "^4.17.20",
     "mongoose": "^5.10.9",
     "nodemailer": "^6.6.0",
-    "pug": "^3.0.0",
     "winston": "^3.3.3",
     "xss-clean": "^0.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^6.1.0",
+    "nodemon": "^2.0.7"
   }
 }

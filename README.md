@@ -1,2 +1,2 @@
-# NodeJS REST API
-NodeJS backend for future web/mobile app
+# PraccHub
+Web application that helps Valorant teams practice

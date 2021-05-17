@@ -15,11 +15,15 @@ mongoose.connect(database, {
    useUnifiedTopology: true
 }).then(() => winston.info('Connected to MongoDB...'));
 
-// View engine
-app.set('view engine', 'pug');
-
 // Routes
 require('./routes')(app);
 
-const port = process.env.PORT || 3000;
+if (process.env.NODE_ENV === "production") {
+   app.use(express.static(path.join(__dirname, '../client/build')));
+   app.get('/', function(req, res) {
+       res.sendFile(path.join(__dirname, 'build', 'index.html'));
+   });
+}
+
+const port = process.env.PORT || 5000;
 app.listen(port, () => winston.info(`Listening on port ${port}...`));

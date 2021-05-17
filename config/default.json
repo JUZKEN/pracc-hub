@@ -1,6 +1,6 @@
 {
-   "MONGODB_URI": "mongodb://localhost/project-name",
-   "JWT_SECRET": "",
+   "MONGODB_URI": "mongodb://localhost/pracc-hub",
+   "JWT_SECRET": "secret",
    "EMAIL": {
       "SMTP_HOST": "smtp.ethereal.email",
       "SMTP_PORT": "587",

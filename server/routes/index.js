@@ -8,7 +8,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 
 const { apiLimiter } = require('../api/middleware/limiter');
 const error = require('../api/middleware/error');
-const apiRouter = require('../api');
+const apiRouter = require('../api/routes');
 
 module.exports = function(app) {
    // Set security HTTP headers
