@@ -14,7 +14,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "production": "react-scripts build && scp -r ./build/* /var/www/pracchub.com/html",
+    "production": "react-scripts build && sudo scp -r ./build/* /var/www/pracchub.com/html",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
