@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { regions, teamRoles, socialLinks } = require('../constants');
 
-const schema = new mongoose.Schema({
+const teamSchema = new mongoose.Schema({
    name: {
       type: String,
       minlength: 2,
@@ -46,7 +46,11 @@ const schema = new mongoose.Schema({
         required: true
      }
   }]
-
 }, {timestamps: true});
 
-module.exports = mongoose.model('Team', schema);
+teamSchema.pre('deleteOne', function(next) {
+   let team = this;
+   // TODO: Do all cleaning, example: delete refs from the hubs
+});
+
+module.exports = mongoose.model('Team', teamSchema);

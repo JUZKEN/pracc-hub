@@ -37,15 +37,16 @@ exports.create = async (req, res, next) => {
 }
 
 exports.delete = async (req, res, next) => {
-   const team = await Team.findOneAndDelete({
-      _id: req.params.id,
-      members: {
-         $elemMatch: {
-            member: req.user._id,
-            type: 'admin'
-         }
-      }
-   });
-   if (!team) return res.status(404).json({error: "You have no permission to delete this team."});
+   const team = await Team.findOneAndDelete({ _id: req.params.id });
+   if (!team) return res.status(404).json({error: "Could not delete this team."});
    res.json({message: "Team was deleted", data: team});
+}
+
+exports.update = async (req, res, next) => {
+   if (req.body.name) {
+      let team = await Team.findOne({ name: req.body.name });
+      if (team) return res.status(401).json({error: 'This team name is already being used.'});
+   }
+   let team = await Team.findOneAndUpdate({ name: req.params.id }, req.body, { new: true });
+   res.json({data: team})
 }

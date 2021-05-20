@@ -1,6 +1,6 @@
 {
    "MONGODB_URI": "mongodb://localhost/pracchub",
-   "JWT_SECRET": "",
+   "JWT_SECRET": "secret",
    "EMAIL": {
       "SMTP_HOST": "smtp.ethereal.email",
       "SMTP_PORT": "587",
