@@ -1,3 +1,4 @@
+const Team = require('../../models/team')
 
 module.exports = async function(req, res, next) {
    const team = await Team.findOne({
@@ -9,6 +10,6 @@ module.exports = async function(req, res, next) {
          }
       }
    });
-   if (!team) return res.status(403).json({error: "You have no permission to delete this team."});
+   if (!team) return res.status(403).json({error: "Access denied."});
    next();
 }

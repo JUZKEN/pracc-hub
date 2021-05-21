@@ -1,7 +1,14 @@
 const regions = ['na', 'eu'];
-const teamRoles = ['admin', 'member'];
-const socialLinks = ['twitter', 'website'];
-
 exports.regions = regions;
+
+const teamRoles = ['admin', 'member'];
 exports.teamRoles = teamRoles;
+
+const socialLinks = ['twitter', 'website'];
 exports.socialLinks = socialLinks;
+
+const hubTypes = ['public', 'invite'];
+exports.hubTypes = hubTypes;
+
+const teamsStatus = ['joined', 'requested'];
+exports.teamsStatus = teamsStatus;

@@ -12,7 +12,8 @@ require('./config')();
 const database = config.get('MONGODB_URI');
 mongoose.connect(database, {
    useNewUrlParser: true,
-   useUnifiedTopology: true
+   useUnifiedTopology: true,
+   useFindAndModify: false
 }).then(() => winston.info('Connected to MongoDB...'));
 
 // Routes

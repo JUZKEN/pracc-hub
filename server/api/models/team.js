@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { regions, teamRoles, socialLinks } = require('../constants');
+const { regions, teamRoles, socialLinks, teamsStatus } = require('../constants');
 
 const teamSchema = new mongoose.Schema({
    name: {
@@ -27,6 +27,18 @@ const teamSchema = new mongoose.Schema({
          ref: 'User',
          required: true,
       }
+  }],
+  hubs: [{
+     status: {
+        type: String,
+        enum: teamsStatus,
+        required: true
+     },
+     hub: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hub',
+        required: true
+     }
   }],
   socialLinks: {
      type: Object,

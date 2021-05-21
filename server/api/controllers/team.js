@@ -3,7 +3,7 @@ const Team = require("../models/team");
 
 exports.index = async (req, res, next) => {
    const teams = await Team.find();
-   if (!teams.length) return res.status(404).json({error: 'Could not find any teams.'});
+   if (!teams.length) return res.status(404).json({error: 'There are no teams yet!'});
    res.json({data: _.map(teams, _.partialRight(_.pick, ['region', '_id', 'name']))});
 };
 
@@ -47,6 +47,6 @@ exports.update = async (req, res, next) => {
       let team = await Team.findOne({ name: req.body.name });
       if (team) return res.status(401).json({error: 'This team name is already being used.'});
    }
-   let team = await Team.findOneAndUpdate({ name: req.params.id }, req.body, { new: true });
+   let team = await Team.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true });
    res.json({data: team})
 }

@@ -1,5 +1,6 @@
 const auth = require('../middleware/auth');
 const teamAdmin = require('../middleware/teams/teamAdmin');
+const teamValidate = require('../middleware/teams/validate');
 const validate = require('../middleware/validate');
 const express = require('express');
 const router = express.Router();
@@ -16,12 +17,12 @@ router.get('/me', auth, Team.me);
 router.get('/:id', auth, Team.get);
 
 /* Create a team */
-router.post('/', [auth, validate.createTeam], Team.create);
+router.post('/', [auth, teamValidate.create], Team.create);
 
 /* Delete a team */
 router.delete('/:id', [auth, teamAdmin], Team.delete);
 
 /* Update a team */
-router.put('/:id', [auth, teamAdmin, validate.updateTeam], Team.update);
+router.put('/:id', [auth, teamAdmin, teamValidate.update], Team.update);
 
 module.exports = router;
