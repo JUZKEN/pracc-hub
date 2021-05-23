@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { hubTypes, teamsStatus } = require('../constants');
+const { hubTypes } = require('../constants');
 
 const hubSchema = new mongoose.Schema({
    name: {
@@ -21,17 +21,33 @@ const hubSchema = new mongoose.Schema({
       required: true,
    },
    teams: [{
-      status: {
-         type: String,
-         enum: teamsStatus,
-         required: true
-      },
-      team: {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: 'Team',
-         required: true,
-      }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team',
+      required: true,
+   }],
+   teamRequests: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team',
+      required: true,
    }]
 }, {timestamps: true});
 
+hubSchema.pre('deleteOne', {document: true}, async function(next) {
+   const hub = this;
+
+   // Remove hub from teams
+   hub.teams.forEach(async t => {
+      await Team.updateOne({ _id: t }, { $pull: { hubs: hub._id } });
+   });
+   
+   // Remove requests from teams
+   hub.teamRequests.forEach(async t => {
+      await Team.updateOne({ _id: t }, { $pull: { hubsRequests: hub._id } });
+   });
+
+   next();
+});
+
 module.exports = mongoose.model('Hub', hubSchema);
+
+const Team = require('./team');

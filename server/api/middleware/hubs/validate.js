@@ -10,3 +10,12 @@ exports.create = (req, res, next) => {
    if (error) return res.status(400).json({message: error.details[0].message});
    next();
 }
+
+exports.handleRequest = (req, res, next) => {
+   const { error } = Joi.object({
+      type: Joi.string().valid('accept', 'reject').required(),
+   }).validate(req.body);
+
+   if (error) return res.status(400).json({message: error.details[0].message});
+   next();
+}

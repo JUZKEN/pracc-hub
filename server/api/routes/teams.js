@@ -19,6 +19,9 @@ router.get('/:id', auth, Team.get);
 /* Create a team */
 router.post('/', [auth, teamValidate.create], Team.create);
 
+/* Set active team */
+router.post('/:id/set-active', auth, Team.setActive);
+
 /* Delete a team */
 router.delete('/:id', [auth, teamAdmin], Team.delete);
 

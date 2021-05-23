@@ -15,6 +15,14 @@ router.get('/', auth, Hub.get);
 /* Create a hub */
 router.post('/', [auth, hubValidate.create], Hub.create);
 
+/* Request to join a hub */
+router.post('/:id/join', auth, Hub.join);
+
+/* TODO: Leave hub route */
+
+/* Accept/Reject team request */
+router.post('/:id/request/:teamId', [auth, hubOwner, hubValidate.handleRequest], Hub.handleRequest);
+
 /* Delete a hub */
 router.delete('/:id', [auth, hubOwner], Hub.delete);
 

@@ -10,6 +10,6 @@ module.exports = async function(req, res, next) {
          }
       }
    });
-   if (!team) return res.status(403).json({error: "Access denied."});
+   if (!team) return res.status(403).json({error: "Could not delete this team."});
    next();
 }

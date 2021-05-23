@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const RefreshToken = require('./refreshToken');
 const VerificationToken = require('./verificationToken');
+const { teamRoles } = require('../constants');
 
 const userSchema = new mongoose.Schema({
    username: {
@@ -24,6 +25,17 @@ const userSchema = new mongoose.Schema({
       required: true,
       minlength: 5,
       maxlength: 1024
+   },
+   activeTeam: {
+      _id: false,
+      type: {
+         type: String,
+         enum: teamRoles
+      },
+      team: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: 'Team'
+      }
    },
    resetPasswordToken: {
       type: String,
