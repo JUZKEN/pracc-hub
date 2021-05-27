@@ -58,10 +58,9 @@ exports.setActive = async (req, res, next) => {
    const team = await Team.findOne({ _id: req.params.id });
    if (!team) return res.status(404).json({error: "Could not find the specified team."});
    
-   let user = team.members.filter(m => m.member == req.user._id);
+   let user = team.members.find(m => m.member == req.user._id);
    if (!user) return res.status(404).json({error: "You are not a member of this team."});
-   user = user[0];
    
-   let updatedUser = await User.findOneAndUpdate({ _id: req.user._id }, { activeTeam: { type: user.type, team: req.params.id } }, {new: true});
-   res.json({message: "Active team updated", data: updatedUser});
+   let updatedUser = await (await User.findOneAndUpdate({ _id: req.user._id }, { activeTeam: req.params.id }, {new: true}));
+   res.json({message: "Active team updated", data: _.pick(updatedUser, ['_id', 'activeTeam'])});
 }

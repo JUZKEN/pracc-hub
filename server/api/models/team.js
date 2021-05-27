@@ -64,8 +64,8 @@ const teamSchema = new mongoose.Schema({
 const updateActiveTeam = async (team) => {
    team.members.forEach(async m => {
       let user = await User.findOne({_id: m.member});
-      if (!user.activeTeam.team) {
-         user.activeTeam = { type: m.type, team: team._id };
+      if (!user.activeTeam) {
+         user.activeTeam = team._id;
          await user.save();
       };
    });

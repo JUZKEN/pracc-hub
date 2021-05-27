@@ -40,13 +40,14 @@ exports.join = async (req, res, next) => {
 
    const user = await User.findOne({ _id: req.user._id });
 
-   if (!user.activeTeam.team) return res.status(404).json({error: "You don't have a team yet!"});
+   if (!user.activeTeam) return res.status(404).json({error: "You don't have a team yet!"});
 
-   const { team: teamId, type: teamType } = user.activeTeam;
-   if (teamType != "admin") return res.status(403).json({error: "You're not an admin of your team!"});
-
-   const team = await Team.findOne({ _id: teamId });
+   const team = await Team.findOne({ _id: user.activeTeam });
    if (!team) return res.status(404).json({error: "Could not find your team."});
+
+   const member = team.members.find(m => m.member == req.user._id);
+   if (!member) return res.status(400).json({error: "You are not part of this team."});
+   if (member.type != "admin") return res.status(403).json({error: "You're not an admin of your team!"});
 
    const hasTeamJoinedTheHub = team.hubs.filter(h => h == req.params.id);
    if (!_.isEmpty(hasTeamJoinedTheHub)) return res.status(400).json({error: "Your team is already inside this hub!"});
