@@ -9,6 +9,3 @@ exports.socialLinks = socialLinks;
 
 const hubTypes = ['public', 'invite'];
 exports.hubTypes = hubTypes;
-
-const teamsStatus = ['joined', 'requested'];
-exports.teamsStatus = teamsStatus;

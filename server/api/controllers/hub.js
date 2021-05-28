@@ -39,7 +39,6 @@ exports.join = async (req, res, next) => {
    if (!hub) return res.status(404).json({error: "Could not find the specified hub."});
 
    const user = await User.findOne({ _id: req.user._id });
-
    if (!user.activeTeam) return res.status(404).json({error: "You don't have a team yet!"});
 
    const team = await Team.findOne({ _id: user.activeTeam });
@@ -47,17 +46,17 @@ exports.join = async (req, res, next) => {
 
    const member = team.members.find(m => m.member == req.user._id);
    if (!member) return res.status(400).json({error: "You are not part of this team."});
-   if (member.type != "admin") return res.status(403).json({error: "You're not an admin of your team!"});
+   if (member.type != "admin") return res.status(403).json({error: "You're not an admin of this team!"});
 
-   const hasTeamJoinedTheHub = team.hubs.filter(h => h == req.params.id);
-   if (!_.isEmpty(hasTeamJoinedTheHub)) return res.status(400).json({error: "Your team is already inside this hub!"});
+   const hasTeamJoinedTheHub = team.hubs.find(h => h.id == req.params.id && h.type == "joined");
+   if (hasTeamJoinedTheHub) return res.status(400).json({error: "Your team is already inside this hub!"});
 
    if (hub.type == "invite") {
-      const hasTeamRequestedTheHub = team.hubsRequests.filter(h => h == req.params.id);
-      if (!_.isEmpty(hasTeamRequestedTheHub)) return res.status(400).json({error: "You already requested to join this hub!"});
+      const hasTeamRequestedTheHub = team.hubs.find(h => h.id == req.params.id && h.type == "requested");
+      if (hasTeamRequestedTheHub) return res.status(400).json({error: "You already requested to join this hub!"});
 
-      team.hubsRequests.push(hub._id);
-      hub.teamRequests.push(team._id);
+      team.hubs.push({ type: "requested", id: hub._id });
+      hub.teams.push({ type: "requested", id: team._id });
       await team.save();
       await hub.save();
       
@@ -65,8 +64,8 @@ exports.join = async (req, res, next) => {
    }
 
    // if public
-   team.hubs.push(hub._id);
-   hub.teams.push(team._id);
+   team.hubs.push({ type: "joined", id: hub._id });
+   hub.teams.push({ type: "joined", id: team._id });
    await team.save();
    await hub.save();
 
@@ -82,26 +81,22 @@ exports.handleRequest = async (req, res, next) => {
    const team = await Team.findOne({ _id: teamId });
    if (!team) return res.status(404).json({ error: "Could not find the specified team." });
 
-   let teamRequest = hub.teamRequests.filter(t => t == teamId);
-   if (_.isEmpty(teamRequest)) return res.status(400).json({ error: "This team has not requested to join this hub." });
+   let hubRequest = team.hubs.find(h => h.id == hubId && h.type == "requested");
+   if (!hubRequest) return res.status(400).json({ error: "This team has not requested to join this hub." });
 
    const { type } = req.body;
 
-   // Remove requests from both
-   team.hubsRequests.pull(hub._id);
-   hub.teamRequests.pull(team._id);
-
    if (type == "reject") {
+      team.hubs.pull({ id: hub._id });
+      hub.teams.pull({ id: team._id });
       await team.save();
       await hub.save();
       return res.json({ message: "Request was rejected" });
    }
 
    // If accept
-   team.hubs.push(hub._id);
-   hub.teams.push(team._id);
-   await team.save();
-   await hub.save();
+   await Team.findOneAndUpdate({ _id: team._id, 'hubs': { $elemMatch: {id: hub._id} } }, {'$set': { 'hubs.$.type': 'joined' }});
+   await Hub.findOneAndUpdate({ _id: hub._id, 'teams': { $elemMatch: {id: team._id} } }, {'$set': { 'teams.$.type': 'joined' }});
 
    res.json({message: "Request was accepted"})
 }

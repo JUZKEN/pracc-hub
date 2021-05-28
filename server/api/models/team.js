@@ -30,14 +30,17 @@ const teamSchema = new mongoose.Schema({
       }
   }],
   hubs: [{
+   _id: false,
+   type: {
+      type: String,
+      enum: ['joined', 'requested'],
+      required: true
+   },
+   id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Hub',
       required: true
-  }],
-  hubsRequests: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Hub',
-      required: true
+   }
   }],
   socialLinks: {
       type: Object,
@@ -95,12 +98,7 @@ teamSchema.pre('deleteOne', {document: true}, async function(next) {
 
    // Remove team from hubs
    team.hubs.forEach(async hub => {
-      await Hub.updateOne({ _id: hub }, { $pull: { teams: team._id } });
-   });
-
-   // Remove request from hubs
-   team.hubsRequests.forEach(async hub => {
-      await Hub.updateOne({ _id: hub }, { $pull: { teamRequests: team._id } });
+      await Hub.updateOne({ _id: hub.id }, { $pull: { teams: { id: team._id } } });
    });
 
    next();
