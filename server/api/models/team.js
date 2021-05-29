@@ -75,13 +75,11 @@ const updateActiveTeam = async (team) => {
 }
 
 teamSchema.pre('save', {document: true, query: false}, async function(next) {
-   console.log('save team hook');
    await updateActiveTeam(this);
    next()
 });
 
 teamSchema.pre('updateOne', {document: true, query: false}, async function(next) {
-   console.log('team update hook');
    await updateActiveTeam(this);
    next()
 });

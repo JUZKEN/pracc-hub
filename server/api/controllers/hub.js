@@ -72,6 +72,31 @@ exports.join = async (req, res, next) => {
    res.json({message: "Joined Hub."});
 }
 
+exports.leave = async (req, res, next) => {
+   const hub = await Hub.findOne({ _id: req.params.id });
+   if (!hub) return res.status(404).json({error: "Could not find the specified hub."});
+
+   const user = await User.findOne({ _id: req.user._id });
+   if (!user.activeTeam) return res.status(404).json({error: "You don't have a team yet!"});
+
+   const team = await Team.findOne({ _id: user.activeTeam });
+   if (!team) return res.status(404).json({error: "Could not find your team."});
+
+   const member = team.members.find(m => m.member == req.user._id);
+   if (!member) return res.status(400).json({error: "You are not part of this team."});
+   if (member.type != "admin") return res.status(403).json({error: "You're not an admin of this team!"});
+
+   const isTeamInTheHub = team.hubs.find(h => h.id == req.params.id);
+   if (!isTeamInTheHub) return res.status(400).json({error: "Your team is not inside this hub!"});
+
+   team.hubs.pull({ id: hub._id });
+   hub.teams.pull({ id: team._id });
+   await team.save();
+   await hub.save();
+   
+   res.json({message: "Successfully left the hub!"})
+}
+
 exports.handleRequest = async (req, res, next) => {
    const { id: hubId, teamId } = req.params;
 
