@@ -125,3 +125,12 @@ exports.handleRequest = async (req, res, next) => {
 
    res.json({message: "Request was accepted"})
 }
+
+exports.update = async (req, res, next) => {
+   if (req.body.name) {
+      let hub = await Hub.findOne({ name: req.body.name });
+      if (hub) return res.status(401).json({error: 'This hub name is already being used.'});
+   }
+   let hub = await Hub.updateOne({ _id: req.params.id }, req.body, { new: true });
+   res.json({data: hub})
+}

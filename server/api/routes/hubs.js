@@ -27,4 +27,7 @@ router.post('/:id/team/:teamId/request', [auth, hubOwner, hubValidate.handleRequ
 /* Delete a hub */
 router.delete('/:id', [auth, hubOwner], Hub.delete);
 
+/* Update a hub */
+router.put('/:id', [auth, hubOwner, hubValidate.update], Hub.update);
+
 module.exports = router;
