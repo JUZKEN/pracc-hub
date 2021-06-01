@@ -126,6 +126,24 @@ exports.handleRequest = async (req, res, next) => {
    res.json({message: "Request was accepted"})
 }
 
+exports.kickTeam = async (req, res, next) => {
+   const { id: hubId, teamId } = req.params;
+   const hub = req.hub;
+
+   const team = await Team.findById(teamId);
+   if (!team) return res.status(404).json({error: "This team doesn't exist."});
+
+   let teamToKick = hub.teams.find(t => t.id.equals(teamId));
+   if (!teamToKick) return res.status(400).json({error: "This team is not inside this hub."});
+
+   hub.teams.pull({ id: teamId });
+   team.hubs.pull({ id: hubId });
+   await team.save();
+   await hub.save();
+
+   res.json({message: "Team was kicked from the hub!"})
+}
+
 exports.update = async (req, res, next) => {
    if (req.body.name) {
       let hub = await Hub.findOne({ name: req.body.name });

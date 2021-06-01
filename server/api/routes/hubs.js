@@ -24,6 +24,9 @@ router.post('/:id/leave', auth, Hub.leave);
 /* Accept/Reject team request */
 router.post('/:id/team/:teamId/request', [auth, hubOwner, hubValidate.handleRequest], Hub.handleRequest);
 
+/* Kick team */
+router.post('/:id/team/:teamId/kick', [auth, hubOwner], Hub.kickTeam);
+
 /* Delete a hub */
 router.delete('/:id', [auth, hubOwner], Hub.delete);
 
