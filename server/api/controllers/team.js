@@ -15,10 +15,10 @@ exports.get = async (req, res, next) => {
 }
 
 exports.me = async (req, res, next) => {
-   const teams = await Team.find({ "members.member": { _id: req.user._id } });
-   if (!teams.length) return res.status(404).json({error: "You don't have a team yet!"});
+   const teams = await Team.find({ 'members': { $elemMatch: { member: req.user._id, type: {$ne: 'invited'} } } });
+   if (_.isEmpty(teams)) return res.status(404).json({error: "You don't have any teams yet"});
 
-   res.json({data: _.map(teams, _.partialRight(_.pick, ['region', '_id', 'name']))});
+   res.json({data: _.map(teams, _.partialRight(_.pick, ['_id', 'name', 'region', 'members', 'hubs', 'playerLinks']))});
 }
 
 exports.create = async (req, res, next) => {

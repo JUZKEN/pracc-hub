@@ -22,6 +22,7 @@ router.post('/:id/request', auth, Hub.request);
 router.post('/:id/leave', auth, Hub.leave);
 
 /* Accept/Reject team request */
+// TODO: separate accept and reject into 2 routes
 router.post('/:id/team/:teamId/request', [auth, hubOwner, hubValidate.handleRequest], Hub.handleRequest);
 
 /* Kick team */

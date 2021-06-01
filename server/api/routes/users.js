@@ -10,13 +10,12 @@ const User = require('../controllers/user');
 router.get('/', [auth, admin], User.index);
 
 /* Get myself */
-router.get('/me', auth, User.me);
+router.get('/myself', auth, User.me);
 
-/* Get my teams */
-router.get('/me/teams', auth, User.myTeams);
+/* TODO: Get single user by id */
 
 /* Update myself */
-router.put('/me', auth, validate.userUpdate, User.update);
+router.put('/myself', auth, validate.userUpdate, User.update);
 
 /* Delete a user */
 router.delete('/:id', [auth, admin], User.delete);

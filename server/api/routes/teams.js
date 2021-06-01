@@ -11,7 +11,7 @@ const Team = require('../controllers/team');
 router.get('/', auth, Team.index);
 
 /* Get my teams */
-router.get('/me', auth, Team.me);
+router.get('/myself', auth, Team.me);
 
 /* Get single team by id */
 router.get('/:id', auth, Team.get);
