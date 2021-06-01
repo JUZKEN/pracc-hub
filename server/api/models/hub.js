@@ -32,6 +32,10 @@ const hubSchema = new mongoose.Schema({
          ref: 'Team',
          required: true,
       }
+   }],
+   activeScrims: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Scrim'
    }]
 }, {timestamps: true});
 
