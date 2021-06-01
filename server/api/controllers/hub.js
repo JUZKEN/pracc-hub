@@ -34,7 +34,7 @@ exports.delete = async (req, res, next) => {
    res.json({message: "This hub was deleted", data: hub});
 }
 
-exports.join = async (req, res, next) => {
+exports.request = async (req, res, next) => {
    const hub = await Hub.findOne({ _id: req.params.id });
    if (!hub) return res.status(404).json({error: "Could not find the specified hub."});
 

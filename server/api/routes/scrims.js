@@ -25,7 +25,7 @@ router.delete('/:id', [auth, scrimHost], Scrim.delete);
 router.post('/:id/request', auth, Scrim.request);
 
 /* Accept/Reject request */
-router.post('/:id/request/:teamId', [auth, scrimHost, scrimValidation.handleRequest], Scrim.handleRequest);
+router.post('/:id/team/:teamId/request', [auth, scrimHost, scrimValidation.handleRequest], Scrim.handleRequest);
 
 /* Finish scrim */
 router.post('/:id/finish', [auth, scrimHost], Scrim.finish);

@@ -10,19 +10,19 @@ const Hub = require('../controllers/hub');
 router.get('/', auth, Hub.index);
 
 /* Get single hub by id */
-router.get('/', auth, Hub.get);
+router.get('/:id', auth, Hub.get);
 
 /* Create a hub */
 router.post('/', [auth, hubValidate.create], Hub.create);
 
 /* Request to join a hub */
-router.post('/:id/join', auth, Hub.join);
+router.post('/:id/request', auth, Hub.request);
 
 /* Leave hub route */
 router.post('/:id/leave', auth, Hub.leave);
 
 /* Accept/Reject team request */
-router.post('/:id/request/:teamId', [auth, hubOwner, hubValidate.handleRequest], Hub.handleRequest);
+router.post('/:id/team/:teamId/request', [auth, hubOwner, hubValidate.handleRequest], Hub.handleRequest);
 
 /* Delete a hub */
 router.delete('/:id', [auth, hubOwner], Hub.delete);

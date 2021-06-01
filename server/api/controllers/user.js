@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Team = require('../models/team');
 
 exports.index = async (req, res, next) => {
    const users = await User.find().select('-password');
@@ -9,6 +10,14 @@ exports.index = async (req, res, next) => {
 exports.me = async (req, res, next) => {
    const user = await User.findById(req.user._id).select('-password');
    res.json({data: user});
+};
+
+exports.myTeams = async (req, res, next) => {
+   // TODO: add type to joined only
+   const teams = await Team.find({ 'members': { $elemMatch: {member: req.user._id} } });
+   if (!teams) return res.status(404).json({error: "You don't have any teams yet"});
+
+   res.json({data: _.map(teams, _.partialRight(_.pick, ['_id', 'name', 'region', 'members', 'hubs', 'playerLinks']))});
 };
 
 exports.delete = async (req, res, next) => {

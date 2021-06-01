@@ -12,12 +12,12 @@ exports.get = async (req, res, next) => {
 }
 
 exports.getFromHub = async (req, res, next) => {
-   const hub = await Hub.findById(req.params.hubId).populate('activeScrims');
-   if (!hub) return res.status(404).json({error: "This hub doesn't exist."});
-
    const user = await User.findById(req.user._id);
    const team = await Team.findById(user.activeTeam);
    if (!team) return res.status(400).json({error: "You don't have a team yet!"});
+   
+   const hub = await Hub.findById(req.params.hubId).populate('activeScrims');
+   if (!hub) return res.status(404).json({error: "This hub doesn't exist."});
 
    if (!isTeamInHub(team, req.params.hubId)) return res.status(400).json({error: "Your team is not inside this hub!"});
 
