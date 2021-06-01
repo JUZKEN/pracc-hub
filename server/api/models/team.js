@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { regions, teamRoles, socialLinks } = require('../constants');
+const { regions, socialLinks } = require('../constants');
 
 const teamSchema = new mongoose.Schema({
    name: {
@@ -19,7 +19,7 @@ const teamSchema = new mongoose.Schema({
       _id: false,
       type: {
          type: String,
-         enum: teamRoles,
+         enum: ['admin', 'member', 'invited'],
          default: 'member',
          required: true
       },

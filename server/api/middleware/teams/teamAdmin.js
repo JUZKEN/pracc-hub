@@ -5,11 +5,11 @@ module.exports = async function(req, res, next) {
       _id: req.params.id,
       members: {
          $elemMatch: {
-            member: req.user._id,
-            type: 'admin'
+            type: 'admin',
+            member: req.user._id
          }
       }
    });
-   if (!team) return res.status(403).json({error: "Could not delete this team."});
+   if (!team) return res.status(403).json({error: "You are not an admin of this team."});
    next();
 }

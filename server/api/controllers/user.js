@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const User = require('../models/user');
 const Team = require('../models/team');
 
@@ -13,9 +14,8 @@ exports.me = async (req, res, next) => {
 };
 
 exports.myTeams = async (req, res, next) => {
-   // TODO: add type to joined only
-   const teams = await Team.find({ 'members': { $elemMatch: {member: req.user._id} } });
-   if (!teams) return res.status(404).json({error: "You don't have any teams yet"});
+   const teams = await Team.find({ 'members': { $elemMatch: { member: req.user._id, type: {$ne: 'invited'} } } });
+   if (_.isEmpty(teams)) return res.status(404).json({error: "You don't have any teams yet"});
 
    res.json({data: _.map(teams, _.partialRight(_.pick, ['_id', 'name', 'region', 'members', 'hubs', 'playerLinks']))});
 };
