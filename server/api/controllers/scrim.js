@@ -5,8 +5,14 @@ const User = require("../models/user");
 const Team = require("../models/team");
 const team = require('../models/team');
 
+exports.get = async (req, res, next) => {
+   const scrim = await Scrim.findById(req.params.id);
+   if (!scrim) return res.status(404).json({error: "This scrim doesn't exist"});
+   res.json({data: _.pick(scrim, ['_id', 'status', 'region', 'hub', 'hostId', 'startsAt', 'maps', 'teams'])})
+}
+
 exports.getFromHub = async (req, res, next) => {
-   const hub = await Hub.findById(req.params.hubId);
+   const hub = await Hub.findById(req.params.hubId).populate('activeScrims');
    if (!hub) return res.status(404).json({error: "This hub doesn't exist."});
 
    const user = await User.findById(req.user._id);
@@ -14,8 +20,18 @@ exports.getFromHub = async (req, res, next) => {
    if (!team) return res.status(400).json({error: "You don't have a team yet!"});
 
    if (!isTeamInHub(team, req.params.hubId)) return res.status(400).json({error: "Your team is not inside this hub!"});
-   // TODO: send populated scrims and not ids
-   res.json({data: hub.activeScrims});
+
+   res.json({data: _.map(hub.activeScrims, _.partialRight(_.pick, ['_id', 'status', 'region', 'hub', 'hostId', 'startsAt', 'maps', 'teams']))});
+}
+
+exports.getFromTeam = async (req, res, next) => {
+   const team = await Team.findById(req.params.teamId);
+   if (!team) return res.status(404).json({error: "This team doesn't exist."});
+
+   const scrims = await Scrim.find({ 'teams': { $elemMatch: {id: req.params.teamId} } });
+   if (_.isEmpty(scrims)) return res.status(404).json({error: "This team doesn't have any scrims yet"});
+
+   res.json({data: _.map(scrims, _.partialRight(_.pick, ['_id', 'status', 'region', 'hub', 'hostId', 'startsAt', 'maps', 'teams']))});
 }
 
 exports.create = async (req, res, next) => {
@@ -64,14 +80,10 @@ exports.request = async (req, res, next) => {
 
    const scrim = await Scrim.findById(req.params.id);
    const hubId = scrim.hub;
-   
-   const hub = await Hub.findById(hubId);
-   if (!hub) return res.status(404).json({error: "This hub doesn't exist."});
+   if (!isTeamInHub(team, hubId)) return res.status(400).json({error: "Your team is not inside this hub!"});
 
    let teamRequest = scrim.teams.find(t => t.id.equals(team._id));
    if (teamRequest) return res.status(400).json({ error: "This team already requested to join this scrim." });
-
-   if (!isTeamInHub(team, hubId)) return res.status(400).json({error: "Your team is not inside this hub!"});
 
    // Request to join
    scrim.teams.push({
@@ -101,6 +113,15 @@ exports.handleRequest = async (req, res, next) => {
    teamRequest.type = "guest";
    await scrim.save();
    res.json({message: "Request was accepted!"})
+}
+
+exports.finish = async (req, res, next) => {
+   const scrim = req.scrim;
+
+   scrim.status = "finished";
+   await scrim.save();
+
+   res.json({message: "This scrim was finished", data: scrim});
 }
 
 const isTeamInHub = (team, hubId) => team.hubs.find(h => h.id.equals(hubId) && h.type == "joined") ? true : false;

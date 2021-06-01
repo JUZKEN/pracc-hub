@@ -7,7 +7,13 @@ const router = express.Router();
 const Scrim = require('../controllers/scrim');
 
 /* Index scrims by hub id */
-router.get('/:hubId', auth, Scrim.getFromHub);
+router.get('/hub/:hubId', auth, Scrim.getFromHub);
+
+/* Get scrims by team id */
+router.get('/team/:teamId', auth, Scrim.getFromTeam);
+
+/* Get single scrim by id */
+router.get('/:id', auth, Scrim.get);
 
 /* Create a scrim */
 router.post('/', [auth, scrimValidation.validate], Scrim.create);
@@ -22,6 +28,6 @@ router.post('/:id/request', auth, Scrim.request);
 router.post('/:id/request/:teamId', [auth, scrimHost, scrimValidation.handleRequest], Scrim.handleRequest);
 
 /* Finish scrim */
-
+router.post('/:id/finish', [auth, scrimHost], Scrim.finish);
 
 module.exports = router;

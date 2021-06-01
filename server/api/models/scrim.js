@@ -50,4 +50,17 @@ const scrimSchema = new mongoose.Schema({
    }
 }, {timestamps: true});
 
+scrimSchema.pre('deleteOne', {document: true}, async function(next) {
+   const scrim = this;
+
+   // Remove scrim from hub
+   const hub = await Hub.findById(scrim.hub);
+   hub.activeScrims.pull(scrim._id);
+   await hub.save();
+
+   next();
+});
+
 module.exports = mongoose.model('Scrim', scrimSchema);
+
+const Hub = require('./hub');
