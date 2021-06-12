@@ -3,7 +3,7 @@ const Heading = {
       fontWeight: "bold"
    },
    defaultProps: {
-      size: "md"
+      size: "lg"
    },
 }
 
