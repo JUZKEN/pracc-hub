@@ -10,13 +10,15 @@ import colors from './colors';
 // Components style overrides
 import Button from './components/Button';
 import Heading from './components/Heading';
+import Modal from './components/Modal';
 
 const theme = extendTheme({
    colors,
    styles,
    components: {
       Button,
-      Heading
+      Heading,
+      Modal
    },
    fonts: {
       heading: "Inter",

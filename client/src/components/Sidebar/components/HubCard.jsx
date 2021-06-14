@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 function HubCard({ name, scrimsGoing }) {
    return (
       <NavLink to="/hub">
-         <Flex align="center" borderRadius="10" p="2" _hover={{bg:"gray.700"}}>
+         <Flex align="center" borderRadius="xl" p="2" _hover={{bg:"gray.700"}}>
             <Avatar size="sm" name={name} bg="gray.600" mr="2" />
             <Flex align="center">
                <Text fontSize="sm" fontWeight="500" mr="1">

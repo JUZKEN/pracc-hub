@@ -12,9 +12,9 @@ class App extends Component {
         <Stack h="100vh" overflowY="hidden">
           <Header />
           <Flex h="100%" mt="0 !important">
-            <Stack w="100%">
+            <Stack w="100%" pb={16} overflowY="auto">
               <Image src={process.env.PUBLIC_URL+'/img/valorant-wallpaper.png'} objectFit="cover" w="100%" h="150px" opacity="0.15" />
-              <Stack p="16">
+              <Stack p={16}>
                <MainRoutes />
               </Stack>
             </Stack>

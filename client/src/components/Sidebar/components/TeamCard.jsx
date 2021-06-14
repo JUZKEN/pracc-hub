@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 function TeamCard({ name }) {
    return (
       <NavLink to="/team">
-         <Flex flexWrap="wrap" justifyContent="center" align="flex-start" borderRadius="10" px="2" p="4" pb="5" _hover={{bg:"gray.700"}}>
+         <Flex flexWrap="wrap" justifyContent="center" align="flex-start" borderRadius="xl" px="2" p="4" pb="5" _hover={{bg:"gray.700"}}>
             <Flex w="100%" justifyContent="center">
                <Avatar size="xl" name={name} bg="gray.600" mb="1" />
             </Flex>

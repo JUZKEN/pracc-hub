@@ -13,7 +13,7 @@ const Button = {
       md: {
          fontSize: "sm",
          px: 4,
-         py: 6,
+         py: 5,
       },
       lg: {
          fontSize: "md"
@@ -41,7 +41,7 @@ const Button = {
       }
    },
    defaultProps: {
-      size: "sm",
+      size: "md",
       variant: "default"
    },
 }

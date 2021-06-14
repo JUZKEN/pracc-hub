@@ -5,7 +5,7 @@ import HubCard from './HubCard';
 function HubsAccordion(props) {
    return (
       <AccordionItem border="none">
-         <AccordionButton px="2" borderRadius="10" _hover={{bg: "gray.800"}}>
+         <AccordionButton px="2" borderRadius="xl" _hover={{bg: "gray.800"}}>
             <Text fontSize="sm" fontWeight="500">Hubs</Text>
             <AccordionIcon />
          </AccordionButton>

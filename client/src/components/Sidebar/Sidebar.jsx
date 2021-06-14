@@ -5,7 +5,7 @@ import HubsAccordion from './components/HubsAccordion';
 
 function Sidebar(props) {
    return (
-      <Stack px="5" py="5" minW="320" bg="gray.800" h="100%">
+      <Stack px="5" py="5" minW="310" bg="gray.800" h="100%">
          <Stack mb="3">
             <TeamCard name="Fnatic" membersNumber={2} />
             <Button size="xs">Change team</Button>
