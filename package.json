@@ -8,7 +8,7 @@
     "backend": "nodemon server/index.js",
     "frontend": "npm run start --prefix client",
     "dev": "concurrently \"npm run backend\" \"npm run start --prefix client\"",
-    "production": "concurrently \"pm2 restart server/index.js --name pracchub\" \"npm run production --prefix client\"",
+    "production": "concurrently \"npm install && pm2 restart server/index.js --name pracchub\" \"npm run production --prefix client\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
