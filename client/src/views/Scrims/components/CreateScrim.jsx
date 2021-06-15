@@ -59,7 +59,7 @@ function CreateScrim(props) {
                         onlySingleValueAllowed={true}
                         showAvatar={true} />
                   </ModalContentBlock>
-                  <ModalContentBlock name="Hubs">
+                  <ModalContentBlock name="Maps">
                      <MapList
                         name="maps"
                         items={VALORANT_MAPS}
