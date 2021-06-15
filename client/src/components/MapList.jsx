@@ -19,7 +19,8 @@ function MapList({ name, items, isSelected, onSelect }) {
 }
 
 MapList.defaultProps = {
-   name: "maps"
+   name: "maps",
+   items: []
 }
 
 export default MapList;

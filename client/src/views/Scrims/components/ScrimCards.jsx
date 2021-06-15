@@ -8,7 +8,7 @@ function ScrimCards({ items }) {
    const buildSkeletons = () => {
       let skeletons = [];
       for (var i = 0; i < 6; i++)
-         skeletons.push(<Skeleton borderRadius="xl" h="220px" />);
+         skeletons.push(<Skeleton key={i} borderRadius="xl" h="220px" />);
       return skeletons;
    }
 

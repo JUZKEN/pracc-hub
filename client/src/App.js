@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ChakraProvider, Stack, Flex, Image } from "@chakra-ui/react";
-import Header from './components/Header/Header';
-import Sidebar from './components/Sidebar/Sidebar';
+import Header from './views/Header/Header';
+import Sidebar from './views/Sidebar/Sidebar';
 import theme from './theme/index';
 import MainRoutes from './routes/MainRoutes';
 

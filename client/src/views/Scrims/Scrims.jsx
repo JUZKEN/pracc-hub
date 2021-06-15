@@ -25,7 +25,7 @@ function Scrims(props) {
    return (
       <Stack>
          <Flex justifyContent="space-between">
-            <Flex align="center">
+            <Flex>
                <Heading mr="3">Find Scrims</Heading>
                <Button size="sm" px="4" mt="1">EU</Button>
             </Flex>

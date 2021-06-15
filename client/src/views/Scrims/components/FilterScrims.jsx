@@ -1,33 +1,27 @@
 import React, { useState } from 'react';
 import { MdFilterList } from "react-icons/md";
-import { Flex, Text, useDisclosure, Box, Button, Icon, Modal, ModalOverlay, ModalBody, ModalContent, ModalHeader, ModalCloseButton, ModalFooter } from '@chakra-ui/react';
-import ButtonList from './ButtonList';
-import MapList from './MapList';
+import { useDisclosure, Box, Button, Icon, Modal, ModalOverlay, ModalBody, ModalContent, ModalHeader, ModalCloseButton, ModalFooter } from '@chakra-ui/react';
+import ButtonList from '../../../components/ButtonList';
+import MapList from '../../../components/MapList';
+import ModalContentBlock from '../../../components/ModalContentBlock';
+import { VALORANT_MAPS } from '../../../constants';
 
-const maps = ["bind", "ascent", "haven", "split", "icebox", "breeze"]; // TODO: Copy this to a constants file
 const hubs = [{ id: 1, name: "Noobs" }, { id: 2, name: "Pediks" }, { id: 3, name: "Pros" }]; // TODO: Get active team's hubs from backend
 
 function FilterScrims({ onFilter }) {
    const { isOpen, onOpen, onClose } = useDisclosure();
    const [ filters, setFilters ] = useState({
-      hubs: {
-         index: [...hubs],
-         selected: hubs.map(hub => hub.id)
-      },
-      maps: {
-         index: [...maps],
-         selected: [...maps]
-      }
+      hubs: hubs.map(hub => hub.id),
+      maps: [...VALORANT_MAPS]
    });
 
    const handleSelect = (id, name) => {
-      let selectedItems = filters[name].selected;
+      let selectedItems = filters[name];
       isSelected(id, name) ? selectedItems.splice(selectedItems.indexOf(id), 1) : selectedItems.push(id);
       setFilters({...filters});
       onFilter(filters);
    }
-
-   const isSelected = (id, name) => filters[name].selected.includes(id);
+   const isSelected = (id, name) => filters[name].includes(id);
 
    return (
       <Box>
@@ -38,25 +32,22 @@ function FilterScrims({ onFilter }) {
                <ModalHeader>Filter Scrims</ModalHeader>
                <ModalCloseButton />
                <ModalBody>
-                  <Flex mt={2} mb={8}>
-                     <Text minW="100px" fontWeight="500" fontSize="sm">Hubs</Text>
+                  <ModalContentBlock name="Hubs">
                      <ButtonList
                         name="hubs"
-                        items={filters.hubs.index}
+                        items={hubs}
                         isSelected={isSelected}
-                        onSelect={handleSelect} />
-                  </Flex>
-                  <Flex>
-                     <Text minW="100px" fontWeight="500" fontSize="sm">Maps</Text>
+                        onSelect={handleSelect}
+                        showAvatar={true} />
+                  </ModalContentBlock>
+                  <ModalContentBlock name="Maps">
                      <MapList
-                        items={filters.maps.index}
+                        items={VALORANT_MAPS}
                         isSelected={isSelected}
                         onSelect={handleSelect} />
-                  </Flex>
+                  </ModalContentBlock>
                </ModalBody>
-               <ModalFooter>
-                  
-               </ModalFooter>
+               <ModalFooter></ModalFooter>
             </ModalContent>
          </Modal>
       </Box>

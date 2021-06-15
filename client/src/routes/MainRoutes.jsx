@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import Scrims from '../components/Scrims/Scrims';
-import Hubs from '../components/Hubs/Hubs';
+import Scrims from '../views/Scrims/Scrims';
+import Hubs from '../views/Hubs/Hubs';
 
 function MainRoutes() {
    return (

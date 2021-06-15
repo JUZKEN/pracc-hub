@@ -2,6 +2,7 @@ import React from 'react';
 import { Stack, Button, Accordion } from '@chakra-ui/react';
 import TeamCard from './components/TeamCard';
 import HubsAccordion from './components/HubsAccordion';
+import CreateScrim from '../Scrims/components/CreateScrim';
 
 function Sidebar(props) {
    return (
@@ -13,7 +14,7 @@ function Sidebar(props) {
          <Accordion defaultIndex={[0]} allowToggle allowMultiple>
             <HubsAccordion />
          </Accordion>
-         <Button size="md" variant="red">Create scrim</Button>
+         <CreateScrim />
       </Stack>
    );
 }
