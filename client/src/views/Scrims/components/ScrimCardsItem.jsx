@@ -1,9 +1,15 @@
-   import React from 'react';
-   import { NavLink } from 'react-router-dom';
-   import { Box, Flex, Text, Heading, Stack, Button, AvatarGroup, Avatar } from '@chakra-ui/react';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { Box, Flex, Text, Heading, Stack, Button, AvatarGroup, Avatar } from '@chakra-ui/react';
 
-   function ScrimCardsItem({ scrim }) {
-      return (
+function ScrimCardsItem({ scrim }) {
+
+   const handleJoinRequest = (e) => {
+      e.preventDefault();
+   }
+
+   return (
+      <NavLink to={`/scrim/${scrim.id}`}>
          <Box bg="gray.800" borderRadius="xl" padding="4" transition="all 0.15s ease-in-out" userSelect="none" _hover={{transform: "scale(1.04)", cursor: "pointer"}}>
             <Stack>
                <Box mb="5">
@@ -21,16 +27,17 @@
                   </AvatarGroup>
                </Box>
                <Flex>
-                  <Stack mr="3" flexGrow="1" >
-                     <NavLink to={`/scrim/${scrim.id}`}>
-                        <Button size="sm" w="100%" variant="red">View</Button>
-                     </NavLink>
-                  </Stack>
-                  <Button size="sm" flexGrow="2" >Request to join</Button>
+                  <Button
+                     onClick={handleJoinRequest}
+                     size="sm"
+                     flexGrow="2">
+                     Request to join
+                  </Button>
                </Flex>
             </Stack>
          </Box>
-      );
-   }
+      </NavLink>
+   );
+}
 
-   export default ScrimCardsItem;
+export default ScrimCardsItem;

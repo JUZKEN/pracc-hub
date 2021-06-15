@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDisclosure, Image, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
+import { useDisclosure, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from '@chakra-ui/react';
 import ButtonList from '../../../components/ButtonList';
 import RegionFlag from '../../../components/RegionFlag';
 import { ALLOWED_REGIONS } from '../../../constants';

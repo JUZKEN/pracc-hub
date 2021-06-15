@@ -40,16 +40,6 @@ function CreateScrim(props) {
                <ModalHeader>Create Scrim</ModalHeader>
                <ModalCloseButton />
                <ModalBody>
-                  <ModalContentBlock name="Region">
-                     <ButtonList
-                        name="region"
-                        items={ALLOWED_REGIONS}
-                        isSelected={isSelectedSingleValue}
-                        onSelect={handleSelectSingleValue}
-                        onlySingleValueAllowed={true}
-                        isObjectsArray={false}
-                        textTransform="uppercase" />
-                  </ModalContentBlock>
                   <ModalContentBlock name="Hubs">
                      <ButtonList
                         name="hub"
