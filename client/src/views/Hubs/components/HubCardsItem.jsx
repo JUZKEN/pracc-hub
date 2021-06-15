@@ -12,7 +12,7 @@ function HubCardsItem({ hub }) {
       <NavLink to={`/hub/${hub.id}`}>
          <Box bg="gray.800" borderRadius="xl" padding="4" transition="all 0.15s ease-in-out" userSelect="none" _hover={{transform: "scale(1.04)"}}>
             <Stack>
-               <Flex justify="space-between" mb="4">
+               <Flex justify="space-between">
                   <Flex align="center">
                      <Avatar bg="gray.500" color="white" name={hub.name} size="lg" mr="3" />
                      <Stack>

@@ -5,6 +5,11 @@ import Sidebar from './views/Sidebar/Sidebar';
 import theme from './theme/index';
 import MainRoutes from './routes/MainRoutes';
 
+/* Import fonts */
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/700.css";
+
 class App extends Component {
   render() {
     return (
