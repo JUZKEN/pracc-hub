@@ -1,5 +1,4 @@
 import { extendTheme } from "@chakra-ui/react"; // eslint-disable-next-line
-import { Fonts } from "./fonts";
 
 // Global style overrides
 import styles from './styles';
@@ -21,8 +20,8 @@ const theme = extendTheme({
       Modal
    },
    fonts: {
-      heading: "Inter",
-      body: "Inter",
+      heading: "Inter, sans-serif",
+      body: "Inter, sans-serif",
    },
    config: {
       useSystemColorMode: false,
